@@ -1,5 +1,7 @@
+import { useEffect, useRef } from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import { useAuthStore } from '@/store/auth.store';
+import { authApi } from '@/lib/api';
 
 import { Navbar } from '@/components/layout/Navbar';
 import { Footer } from '@/components/layout/Footer';
@@ -50,6 +52,30 @@ function DashboardLayout({ children }: { children: React.ReactNode }) {
 }
 
 export default function App() {
+  const { token, isAuthenticated, setUser, clearAuth } = useAuthStore();
+  const hasCheckedSession = useRef(false);
+
+  useEffect(() => {
+    if (hasCheckedSession.current) return;
+    hasCheckedSession.current = true;
+
+    if (!token && !isAuthenticated) return;
+
+    if (!token) {
+      clearAuth();
+      return;
+    }
+
+    authApi
+      .me()
+      .then((res) => {
+        setUser(res.data.user, token);
+      })
+      .catch(() => {
+        clearAuth();
+      });
+  }, [token, isAuthenticated, setUser, clearAuth]);
+
   return (
     <Routes>
       <Route path="/" element={<AppLayout><LandingPage /></AppLayout>} />

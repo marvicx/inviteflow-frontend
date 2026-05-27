@@ -1,4 +1,5 @@
 import axios from "axios";
+import { useAuthStore } from "@/store/auth.store";
 
 const API_ORIGIN = import.meta.env.VITE_API_URL?.replace(/\/+$/, "");
 const API_BASE_URL = API_ORIGIN ? `${API_ORIGIN}/api` : "/api";
@@ -21,8 +22,11 @@ api.interceptors.response.use(
   (res) => res,
   (err) => {
     if (err.response?.status === 401) {
-      localStorage.removeItem("token");
-      window.location.href = "/auth/login";
+      useAuthStore.getState().clearAuth();
+
+      if (!window.location.pathname.startsWith("/auth/")) {
+        window.location.href = "/auth/login";
+      }
     }
     return Promise.reject(err);
   },
