@@ -17,7 +17,8 @@ const step2Schema = z.object({
     rsvpDeadline: z.string().optional(),
     maxGuests: z.coerce.number().min(1).max(10000).optional(),
 });
-type Step2Data = z.infer<typeof step2Schema>;
+type Step2FormValues = z.input<typeof step2Schema>;
+type Step2Data = z.output<typeof step2Schema>;
 
 type DraftQuestion = {
     questionText: string;
@@ -59,7 +60,7 @@ export function CreateInvitationPage() {
     });
     const templates = templatesData?.data?.templates ?? [];
 
-    const { register, handleSubmit, getValues, formState: { errors } } = useForm<Step2Data>({
+    const { register, handleSubmit, getValues, formState: { errors } } = useForm<Step2FormValues, undefined, Step2Data>({
         resolver: zodResolver(step2Schema),
     });
 

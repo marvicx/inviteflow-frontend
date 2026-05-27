@@ -17,7 +17,8 @@ const schema = z.object({
     plusOnes: z.coerce.number().min(0).max(10).optional(),
     message: z.string().max(500).optional(),
 });
-type FormData = z.infer<typeof schema>;
+type FormValues = z.input<typeof schema>;
+type FormData = z.output<typeof schema>;
 
 export function RsvpPage() {
     const { slug } = useParams<{ slug: string }>();
@@ -31,7 +32,7 @@ export function RsvpPage() {
 
     const inv = data?.data?.invitation;
 
-    const { register, handleSubmit, watch, formState: { errors } } = useForm<FormData>({
+    const { register, handleSubmit, watch, formState: { errors } } = useForm<FormValues, undefined, FormData>({
         resolver: zodResolver(schema),
         defaultValues: { rsvpStatus: 'YES', plusOnes: 0 },
     });

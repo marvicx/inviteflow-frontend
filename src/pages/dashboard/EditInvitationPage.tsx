@@ -27,7 +27,8 @@ const schema = z.object({
     rsvpDeadline: z.string().optional(),
     maxGuests: z.coerce.number().min(1).max(10000).optional(),
 });
-type FormData = z.infer<typeof schema>;
+type FormValues = z.input<typeof schema>;
+type FormData = z.output<typeof schema>;
 
 type DraftFaq = { question: string; answer: string };
 
@@ -58,7 +59,7 @@ export function EditInvitationPage() {
 
     const inv = data?.data?.invitation;
 
-    const { register, handleSubmit, reset, formState: { errors, isSubmitting } } = useForm<FormData>({
+    const { register, handleSubmit, reset, formState: { errors, isSubmitting } } = useForm<FormValues, undefined, FormData>({
         resolver: zodResolver(schema),
     });
 
