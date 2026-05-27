@@ -315,7 +315,7 @@ export function EditInvitationPage() {
                                     className={`px-3 py-1.5 rounded-full text-xs border transition-all ${headerDecoration === d.value
                                         ? 'border-primary bg-primary/10 text-primary font-semibold'
                                         : 'border-gray-200 text-gray-500 hover:border-gray-400'
-                                    }`}
+                                        }`}
                                 >
                                     {d.label}
                                 </button>
